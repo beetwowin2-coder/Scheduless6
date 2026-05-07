@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super AI SS6 Schedule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f3f4f6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .lecturer-tag {
+            display: inline-block;
+            margin-top: 0.375rem; /* mt-1.5 */
+            background-color: #eef2ff; /* bg-indigo-100 */
+            color: #3730a3; /* text-indigo-800 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* font-semibold */
+            padding-left: 0.625rem; /* px-2.5 */
+            padding-right: 0.625rem;
+            padding-top: 0.125rem; /* py-0.5 */
+            padding-bottom: 0.125rem;
+            border-radius: 9999px; /* rounded-full */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="text-gray-800 pb-10">
+
+    <header class="bg-blue-800 text-white p-4 sticky top-0 z-50 shadow-md">
+        <h1 class="text-xl font-bold text-center">Super AI SS6 Schedule</h1>
+        <p class="text-sm text-center text-blue-200">Onsite (Level 2) | 8 พ.ค. - 8 มิ.ย.</p>
+        <div class="text-center mt-1.5">
+            <a href="https://docs.google.com/spreadsheets/d/1to9PDnQMgH9MHiCNIHODkDRftGiHgYVKZUDRS50HsnA/edit?gid=0#gid=0" target="_blank" class="text-xs text-blue-300 hover:text-white underline inline-flex items-center gap-1 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                ดูตารางฉบับเต็ม (Google Sheets)
+            </a>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 mt-4 max-w-md">
+        <!-- Search Input -->
+        <div class="mb-4">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="ค้นหาหัวข้อเรียน, ชื่อวิทยากร..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all">
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex overflow-x-auto space-x-2 pb-2 no-scrollbar mb-4" id="week-filters">
+            <button onclick="filterWeek('all')" data-week="all" class="px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold whitespace-nowrap shadow-sm">ทั้งหมด</button>
+            <button onclick="filterWeek('W3')" data-week="W3" class="px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold whitespace-nowrap hover:bg-gray-300 transition">Week 3</button>
+            <button onclick="filterWeek('W4')" data-week="W4" class="px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold whitespace-nowrap hover:bg-gray-300 transition">Week 4</button>
+            <button onclick="filterWeek('W5')" data-week="W5" class="px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold whitespace-nowrap hover:bg-gray-300 transition">Week 5</button>
+            <button onclick="filterWeek('W6')" data-week="W6" class="px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold whitespace-nowrap hover:bg-gray-300 transition">Week 6</button>
+        </div>
+
+        <!-- Schedule List -->
+        <div id="schedule-container" class="space-y-4">
+            <!-- Cards will be injected here by JavaScript -->
+        </div>
+
+        <!-- Scroll to Top Button -->
+        <button id="scrollToTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-blue-800 text-white p-3 rounded-full shadow-lg hidden hover:bg-blue-700 hover:scale-105 transition-all z-50 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        const scheduleData = [
+            // Week 3
+            { date: "8 พ.ค. (May 08)", day: "Friday", dayTh: "วันศุกร์", week: "W3",
+              am: "Registration บริเวณโดมกิจกรรม<br><span class='lecturer-tag'>🧑‍🏫 TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Orientation in Camp at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Asst.Prof.Dr. Nongnuch Ketui</span></div><div><span class='font-semibold'>16.00-17.00:</span> Innovation Mini-Hackathon Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 SS6 Academic Team</span></div>",
+              evening: "Innovation Mini-Hackathon Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 TA</span>" },
+            { date: "9 พ.ค. (May 09)", day: "Saturday", dayTh: "วันเสาร์", week: "W3",
+              am: "Innovation Mini-Hackathon Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Hackathon</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching and Opening at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Deputy Prime Minister and Committee</span></div><div><span class='font-semibold'>16.00-17.00:</span> Team Building at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 TA and Staffs</span></div>",
+              evening: "Retrospection at House<br><span class='text-[11px] text-gray-500'>Hack -11:00</span>" },
+            { date: "10 พ.ค. (May 10)", day: "Sunday", dayTh: "วันอาทิตย์", week: "W3",
+              am: "Recreation (นันทนาการของค่าย) at Adventure Zone<br><span class='lecturer-tag'>🧑‍🏫 TA and Staffs</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Home Building (เลือกประธาน ผู้ประสานงาน เลขา)<br><span class='lecturer-tag'>🧑‍🏫 TA and Staffs</span></div><div><span class='font-semibold'>16.00-17.00:</span> House Meeting<br><span class='lecturer-tag'>🧑‍🏫 TA บ้าน</span></div>",
+              evening: "House Meeting<br><span class='lecturer-tag'>🧑‍🏫 TA บ้าน</span>" },
+            { date: "11 พ.ค. (May 11)", day: "Monday", dayTh: "วันจันทร์", week: "W3",
+              am: "Lecture Time: Time Series Analysis 1 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Lecture Time: Time Series Analysis 2 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Office Hour from Academic Team<br><span class='lecturer-tag'>🧑‍🏫 Academic Team at Main</span></div>",
+              evening: "Experience Sharing at To Be Number One / Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "12 พ.ค. (May 12)", day: "Tuesday", dayTh: "วันอังคาร", week: "W3",
+              am: "Hackathon 1 Brief Challenge Hackathon : business case + dataset + KPI + rubric at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Technical Lesson #1 for Hackathon 1 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Technical Lesson #2 for Hackathon 1 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div>",
+              evening: "Business & Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "13 พ.ค. (May 13)", day: "Wednesday", dayTh: "วันพุธ", week: "W3",
+              am: "House Meeting at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Consult Time at House<br><span class='lecturer-tag'>🧑‍🏫 Hackathon Owner and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Talk: from Company at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Company</span></div>",
+              evening: "Hackathon Time / Hackathon at House" },
+            { date: "14 พ.ค. (May 14)", day: "Thursday", dayTh: "วันพฤหัสบดี", week: "W3",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Hackathon Time / Hackathon at House</div><div><span class='font-semibold'>16.00-17.00:</span> Hackathon Time / Hackathon at House</div>",
+              evening: "House Meeting<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>" },
+            { date: "15 พ.ค. (May 15)", day: "Friday", dayTh: "วันศุกร์", week: "W3",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div>",
+              evening: "Relax Time ปิดห้องบ้าน" },
+              
+            // Week 4
+            { date: "16 พ.ค. (May 16)", day: "Saturday", dayTh: "วันเสาร์", week: "W4",
+              am: "Retrospection at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div><div><span class='font-semibold'>16.00-17.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div>",
+              evening: "Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span>" },
+            { date: "17 พ.ค. (May 17)", day: "Sunday", dayTh: "วันอาทิตย์", week: "W4", isRefreshment: true, am: "Refreshment time", pm: "Refreshment time", evening: "Refreshment time" },
+            { date: "18 พ.ค. (May 18)", day: "Monday", dayTh: "วันจันทร์", week: "W4",
+              am: "Lecture Time: CV Fine-tune & Optimization at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Lecture Time: Inference Optimization at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Office Hour from Academic Team<br><span class='lecturer-tag'>🧑‍🏫 Academic Team at Main</span></div>",
+              evening: "Experience Sharing at To Be Number One / Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "19 พ.ค. (May 19)", day: "Tuesday", dayTh: "วันอังคาร", week: "W4",
+              am: "Hackathon 2 Brief Challenge Hackathon : business case + dataset + KPI + rubric at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Technical Lesson #1 for Hackathon 2 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Technical Lesson #2 for Hackathon 2 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div>",
+              evening: "Business & Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecture at Main</span>" },
+            { date: "20 พ.ค. (May 20)", day: "Wednesday", dayTh: "วันพุธ", week: "W4",
+              am: "House Meeting at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Consult Time at House<br><span class='lecturer-tag'>🧑‍🏫 Hackathon Owner and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Job Fair at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Company</span></div>",
+              evening: "Hackathon Time / Hackathon at House" },
+            { date: "21 พ.ค. (May 21)", day: "Thursday", dayTh: "วันพฤหัสบดี", week: "W4",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Hackathon Time / Hackathon at House</div><div><span class='font-semibold'>16.00-17.00:</span> Hackathon Time / Hackathon at House</div>",
+              evening: "House Meeting<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>" },
+            { date: "22 พ.ค. (May 22)", day: "Friday", dayTh: "วันศุกร์", week: "W4",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div>",
+              evening: "Relax Time ปิดห้องบ้าน" },
+              
+            // Week 5
+            { date: "23 พ.ค. (May 23)", day: "Saturday", dayTh: "วันเสาร์", week: "W5",
+              am: "Retrospection at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div><div><span class='font-semibold'>16.00-17.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div>",
+              evening: "Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span>" },
+            { date: "24 พ.ค. (May 24)", day: "Sunday", dayTh: "วันอาทิตย์", week: "W5", isRefreshment: true, am: "Refreshment time", pm: "Refreshment time", evening: "Refreshment time" },
+            { date: "25 พ.ค. (May 25)", day: "Monday", dayTh: "วันจันทร์", week: "W5",
+              am: "Lecture Time: Singnal Processing at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Lecture Time: Physical Data & HCI Applications at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Dr. Aslan B. Wong</span></div><div><span class='font-semibold'>16.00-17.00:</span> Office Hour from Academic Team<br><span class='lecturer-tag'>🧑‍🏫 Academic Team at Main</span></div>",
+              evening: "Experience Sharing at To Be Number One / Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "26 พ.ค. (May 26)", day: "Tuesday", dayTh: "วันอังคาร", week: "W5",
+              am: "Hackathon 2 Brief Challenge Hackathon : business case + dataset + KPI + rubric at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Technical Lesson #1 for Hackathon 3 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Technical Lesson #2 for Hackathon 3 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div>",
+              evening: "Business & Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecture at Main</span>" },
+            { date: "27 พ.ค. (May 27)", day: "Wednesday", dayTh: "วันพุธ", week: "W5",
+              am: "House Meeting at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Consult Time at House<br><span class='lecturer-tag'>🧑‍🏫 Hackathon Owner and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Job Fair at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Company</span></div>",
+              evening: "Hackathon Time / Hackathon at House" },
+            { date: "28 พ.ค. (May 28)", day: "Thursday", dayTh: "วันพฤหัสบดี", week: "W5",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Hackathon Time / Hackathon at House</div><div><span class='font-semibold'>16.00-17.00:</span> Hackathon Time / Hackathon at House</div>",
+              evening: "House Meeting<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>" },
+            { date: "29 พ.ค. (May 29)", day: "Friday", dayTh: "วันศุกร์", week: "W5",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div>",
+              evening: "Relax Time ปิดห้องบ้าน" },
+              
+            // Week 6
+            { date: "30 พ.ค. (May 30)", day: "Saturday", dayTh: "วันเสาร์", week: "W6",
+              am: "Retrospection at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div><div><span class='font-semibold'>16.00-17.00:</span> Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span></div>",
+              evening: "Log Session<br><span class='lecturer-tag'>🧑‍🏫 Trainee and House Committee</span>" },
+            { date: "31 พ.ค. (May 31)", day: "Sunday", dayTh: "วันอาทิตย์", week: "W6", isRefreshment: true, am: "Refreshment time", pm: "Refreshment time", evening: "Refreshment time" },
+            { date: "1 มิ.ย. (Jun 01)", day: "Monday", dayTh: "วันจันทร์", week: "W6",
+              am: "Lecture Time: Agentic AI at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Lecture Time: Agentic AI & Secutity at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Office Hour from Academic Team<br><span class='lecturer-tag'>🧑‍🏫 Academic Team at Main</span></div>",
+              evening: "Experience Sharing at To Be Number One / Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "2 มิ.ย. (Jun 02)", day: "Tuesday", dayTh: "วันอังคาร", week: "W6",
+              am: "Hackathon 2 Brief Challenge Hackathon : business case + dataset + KPI + rubric at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Technical Lesson #1 for Hackathon 4 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div><div><span class='font-semibold'>16.00-17.00:</span> Technical Lesson #2 for Hackathon 4 at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span></div>",
+              evening: "Business & Soft Skill at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Lecturer</span>" },
+            { date: "3 มิ.ย. (Jun 03)", day: "Wednesday", dayTh: "วันพุธ", week: "W6",
+              am: "House Meeting at House<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Consult Time at House<br><span class='lecturer-tag'>🧑‍🏫 Hackathon Owner and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Job Fair at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Company</span></div>",
+              evening: "Hackathon Time / Hackathon at House" },
+            { date: "4 มิ.ย. (Jun 04)", day: "Thursday", dayTh: "วันพฤหัสบดี", week: "W6",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Hackathon Time / Hackathon at House</div><div><span class='font-semibold'>16.00-17.00:</span> Hackathon Time / Hackathon at House</div>",
+              evening: "House Meeting<br><span class='lecturer-tag'>🧑‍🏫 House Committee and TA</span>" },
+            { date: "5 มิ.ย. (Jun 05)", day: "Friday", dayTh: "วันศุกร์", week: "W6",
+              am: "Hackathon Time / Hackathon at House",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div><div><span class='font-semibold'>16.00-17.00:</span> Pitching Time at To Be Number One<br><span class='lecturer-tag'>🧑‍🏫 Committee and Academic Team</span></div>",
+              evening: "Relax Time ปิดห้องบ้าน" },
+            { date: "6 มิ.ย. (Jun 06)", day: "Saturday", dayTh: "วันเสาร์", week: "W6",
+              am: "Assessment - Posttest at To Be Number One",
+              pm: "<span class='font-semibold'>13.30-17.00:</span> Individual PostTest at To Be Number One",
+              evening: "Individual PostTest at To Be Number One" },
+            { date: "7 มิ.ย. (Jun 07)", day: "Sunday", dayTh: "วันอาทิตย์", week: "W6",
+              am: "Individual PostTest at To Be Number One<br><span class='text-[11px] text-gray-500'>Hack-10.00</span>",
+              pm: "<div class='mb-1.5'><span class='font-semibold'>13.30-16.00:</span> Pitching & Presentation at To Be Number One</div><div><span class='font-semibold'>16.00-17.00:</span> Award at To Be Number One</div>",
+              evening: "Party<br><span class='text-[11px] text-gray-500'>TBA</span>" },
+            { date: "8 มิ.ย. (Jun 08)", day: "Monday", dayTh: "วันจันทร์", week: "W6",
+              am: "Home",
+              pm: "-",
+              evening: "-" }
+        ];
+
+        let currentWeek = 'all';
+
+        function filterWeek(filter) {
+            // Update filter button styling
+            document.querySelectorAll('#week-filters button').forEach(btn => {
+                if (btn.dataset.week === filter) {
+                    btn.className = "px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold whitespace-nowrap shadow-sm";
+                } else {
+                    btn.className = "px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold whitespace-nowrap hover:bg-gray-300 transition";
+                }
+            });
+
+            currentWeek = filter;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '';
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredData = currentWeek === 'all' ? scheduleData : scheduleData.filter(d => d.week === currentWeek);
+
+            if (searchTerm) {
+                filteredData = filteredData.filter(item => {
+                    const searchableText = `${item.date || ''} ${item.dayTh || ''} ${item.am || ''} ${item.pm || ''} ${item.evening || ''}`.toLowerCase();
+                    return searchableText.includes(searchTerm);
+                });
+            }
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `<div class="text-center py-10"><p class="text-gray-500 text-sm">ไม่พบข้อมูลที่ค้นหา</p></div>`;
+                return;
+            }
+
+            const dayColors = { "Sunday": "border-red-500", "Monday": "border-yellow-400", "Tuesday": "border-pink-500", "Wednesday": "border-green-500", "Thursday": "border-orange-500", "Friday": "border-blue-400", "Saturday": "border-purple-500" };
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+
+                if (item.isRefreshment) {
+                    card.className = `bg-red-50 rounded-xl shadow-sm border border-red-200 p-4 mb-4 border-l-4 border-red-500`;
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h2 class="font-bold text-base text-red-800">${item.date}</h2>
+                            <span class="text-xs font-semibold px-2 py-1 bg-red-100 rounded text-red-700 shadow-sm">${item.dayTh} (${item.day})</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 mt-4">
+                            <span class="text-2xl">☕</span>
+                            <p class="font-semibold text-red-700 text-lg">Refreshment Time</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    return;
+                }
+
+                const borderCol = dayColors[item.day] || "border-gray-400";
+                card.className = `bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 border-l-4 ${borderCol}`;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-3 border-b border-gray-100 pb-3">
+                        <h2 class="font-bold text-base text-gray-800">${item.date}</h2>
+                        <span class="text-xs font-semibold px-2 py-1 bg-gray-100 rounded text-gray-600 shadow-sm">${item.dayTh} (${item.day})</span>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <!-- Morning -->
+                        <div class="p-3 rounded-lg bg-blue-50/50">
+                            <div class="flex items-start">
+                                <div class="w-[80px] flex-shrink-0 flex flex-col">
+                                    <span class="text-blue-800 font-semibold leading-none">ช่วงเช้า</span>
+                                    <span class="text-gray-500 text-[11px] mt-1 font-mono tracking-tighter">09:00-12:00</span>
+                                </div>
+                                <div class="text-gray-800 leading-tight flex-1 pl-2">${item.am}</div>
+                            </div>
+                        </div>
+                        <!-- Afternoon -->
+                        <div class="p-3 rounded-lg bg-orange-50/50">
+                            <div class="flex items-start">
+                                <div class="w-[80px] flex-shrink-0 flex flex-col">
+                                    <span class="text-orange-800 font-semibold leading-none">ช่วงบ่าย</span>
+                                    <span class="text-gray-500 text-[11px] mt-1 font-mono tracking-tighter">13:30-17:00</span>
+                                </div>
+                                <div class="text-gray-800 leading-tight flex-1 pl-2">${item.pm}</div>
+                            </div>
+                        </div>
+                        <!-- Evening -->
+                        <div class="p-3 rounded-lg bg-indigo-50/50">
+                            <div class="flex items-start">
+                                <div class="w-[80px] flex-shrink-0 flex flex-col">
+                                    <span class="text-indigo-800 font-semibold leading-none">ช่วงค่ำ</span>
+                                    <span class="text-gray-500 text-[11px] mt-1 font-mono tracking-tighter">18:30-20:30</span>
+                                </div>
+                                <div class="text-gray-800 leading-tight flex-1 pl-2">${item.evening}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize app with all schedule displayed
+        filterWeek('all');
+
+        // Scroll to Top Logic
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollToTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        };
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
